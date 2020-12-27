@@ -5,9 +5,10 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 //@RequestMapping(method = RequestMethod.GET)// class-level method filter
+@RequestMapping("/sample")
 public class SampleController {
 
-    @GetMapping("/helloGet")
+    @GetMapping({"/helloGet", "/helloGet2"})
     public @ResponseBody String helloGet() {
         return "helloGet";
     }
@@ -16,4 +17,36 @@ public class SampleController {
     public @ResponseBody String helloPost() {
         return "helloPost";
     }
+
+    @GetMapping("/hello/?")
+    public @ResponseBody String helloChar() {
+        return "helloChar";
+    }
+
+    @GetMapping("/hello/*")
+    public @ResponseBody String helloChars() {
+        return "helloChars";
+    }
+
+    @GetMapping("/hello/**")
+    public @ResponseBody String helloPath() {
+        return "helloPath";
+    }
+    @GetMapping("/hello/jumen")
+    public @ResponseBody String helloJumen() {
+        return "hello jumen";
+    }
+
+    @GetMapping("/{name:[a-z]+}")
+    public @ResponseBody String helloRegExp(@PathVariable String name) {
+        return "helloRegExp " + name;
+    }
+
+
+
+
+
+
+
+
 }
