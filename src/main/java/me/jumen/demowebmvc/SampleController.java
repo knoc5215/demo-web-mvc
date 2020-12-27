@@ -1,5 +1,6 @@
 package me.jumen.demowebmvc;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -49,6 +50,31 @@ public class SampleController {
     @GetMapping(value = "/json", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody String json() {
         return "hello json";
+    }
+
+    @GetMapping(value = "/header", headers = HttpHeaders.FROM)
+    public @ResponseBody String header() {
+        return "header";
+    }
+
+    @GetMapping(value = "/notHeader", headers = "!" + HttpHeaders.FROM)
+    public @ResponseBody String notHeader() {
+        return "notHeader";
+    }
+
+    @GetMapping(value = "/param", params = "param")
+    public @ResponseBody String param() {
+        return "param";
+    }
+
+    @GetMapping(value = "/notParam", params = "!" + "param")
+    public @ResponseBody String notParam() {
+        return "notParam";
+    }
+
+    @GetMapping(value = "/paramAndValue", params = "param=1")
+    public @ResponseBody String paramAndValue() {
+        return "paramAndValue";
     }
 
 

@@ -3,8 +3,10 @@ package me.jumen.demowebmvc;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -115,6 +117,61 @@ class SampleControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string("hello json"))
+        ;
+    }
+
+    // @GetMapping(value = "/header", headers = HttpHeaders.FROM)
+    @Test
+    public void header() throws Exception {
+        mockMvc.perform(get("/sample/header")
+                .header("FROM", "HOME"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string("header"))
+        ;
+    }
+
+    // @GetMapping(value = "/notHeader", headers = "!" + HttpHeaders.FROM)
+    @Test
+    public void notHeader() throws Exception {
+        mockMvc.perform(get("/sample/notHeader")
+                .header("FROM", "HOME"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string("notHeader"))
+        ;
+    }
+
+//    @GetMapping(value = "/param", params = "param")
+    @Test
+    public void param() throws Exception {
+        mockMvc.perform(get("/sample/param")
+                .param("param", "1"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string("param"))
+        ;
+    }
+
+    @GetMapping(value = "/notParam", params = "!" + "param")
+    @Test
+    public void notParam() throws Exception {
+        mockMvc.perform(get("/sample/notParam")
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string("notParam"))
+        ;
+    }
+
+    // @GetMapping(value = "/param", params = "param=1")
+    @Test
+    public void paramAndValue() throws Exception {
+        mockMvc.perform(get("/sample/paramAndValue")
+                .param("param", "1"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string("paramAndValue"))
         ;
     }
 }
