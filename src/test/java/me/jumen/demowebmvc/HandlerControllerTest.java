@@ -6,8 +6,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -33,6 +32,30 @@ class HandlerControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(1))
+        ;
+    }
+
+    @Test
+    public void getEventRequestParam() throws Exception {
+        mockMvc.perform(post("/events")
+                    .param("name", "jumen")
+                    .param("limit", "10"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("name").value("jumen"))
+                .andExpect(jsonPath("limit").value(10))
+        ;
+    }
+
+    @Test
+    public void getEventMap() throws Exception {
+        mockMvc.perform(post("/events/map")
+                    .param("name", "jumen")
+                    .param("limit", "10"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("name").value("jumen"))
+                .andExpect(jsonPath("limit").value(10))
         ;
     }
 
