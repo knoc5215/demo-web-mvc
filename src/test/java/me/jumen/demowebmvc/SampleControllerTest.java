@@ -23,6 +23,16 @@ class SampleControllerTest {
     MockMvc mockMvc;
 
     @Test
+    public void helloTest() throws Exception {
+        mockMvc.perform(get("/sample/hello"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string("hello"))
+        ;
+    }
+
+
+    @Test
     public void helloGet() throws Exception {
         mockMvc.perform(get("/sample/helloGet"))
                 .andDo(print())

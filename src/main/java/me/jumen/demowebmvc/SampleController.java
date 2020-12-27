@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/sample")
 public class SampleController {
 
-    @GetMapping("/hello")
+//    @GetMapping("/hello")
+    @GetHelloMapping
     public @ResponseBody String hello() {
         return "hello";
     }
