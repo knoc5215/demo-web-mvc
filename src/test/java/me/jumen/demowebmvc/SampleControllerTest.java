@@ -3,6 +3,7 @@ package me.jumen.demowebmvc;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -98,10 +99,22 @@ class SampleControllerTest {
     // /regExp
     @Test
     public void helloRegExp() throws Exception {
-        mockMvc.perform(get("/sample/jumen"))
+        mockMvc.perform(get("/sample/regExp/jumen"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string("helloRegExp jumen"))
+        ;
+    }
+
+    // @GetMapping(value = "/json", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Test
+    public void json() throws Exception {
+        mockMvc.perform(get("/sample/json")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string("hello json"))
         ;
     }
 }
