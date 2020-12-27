@@ -11,6 +11,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/sample")
 public class SampleController {
 
+    @GetMapping("/hello")
+    public @ResponseBody String hello() {
+        return "hello";
+    }
+
     @GetMapping({"/helloGet", "/helloGet2"})
     public @ResponseBody String helloGet() {
         return "helloGet";
@@ -76,6 +81,10 @@ public class SampleController {
     public @ResponseBody String paramAndValue() {
         return "paramAndValue";
     }
+
+
+
+
 
 
 

@@ -6,11 +6,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.hasItems;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -112,8 +115,8 @@ class SampleControllerTest {
     @Test
     public void json() throws Exception {
         mockMvc.perform(get("/sample/json")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string("hello json"))
@@ -122,7 +125,7 @@ class SampleControllerTest {
 
     // @GetMapping(value = "/header", headers = HttpHeaders.FROM)
     @Test
-    public void header() throws Exception {
+    public void headerTest() throws Exception {
         mockMvc.perform(get("/sample/header")
                 .header("FROM", "HOME"))
                 .andDo(print())
@@ -133,7 +136,7 @@ class SampleControllerTest {
 
     // @GetMapping(value = "/notHeader", headers = "!" + HttpHeaders.FROM)
     @Test
-    public void notHeader() throws Exception {
+    public void notHeaderTest() throws Exception {
         mockMvc.perform(get("/sample/notHeader")
                 .header("FROM", "HOME"))
                 .andDo(print())
@@ -142,9 +145,9 @@ class SampleControllerTest {
         ;
     }
 
-//    @GetMapping(value = "/param", params = "param")
+    //    @GetMapping(value = "/param", params = "param")
     @Test
-    public void param() throws Exception {
+    public void paramTest() throws Exception {
         mockMvc.perform(get("/sample/param")
                 .param("param", "1"))
                 .andDo(print())
@@ -155,9 +158,9 @@ class SampleControllerTest {
 
     @GetMapping(value = "/notParam", params = "!" + "param")
     @Test
-    public void notParam() throws Exception {
+    public void notParamTest() throws Exception {
         mockMvc.perform(get("/sample/notParam")
-                )
+        )
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string("notParam"))
@@ -172,6 +175,24 @@ class SampleControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string("paramAndValue"))
+        ;
+    }
+
+    @Test
+    public void headTest() throws Exception {
+        mockMvc.perform(head("/sample/hello"))
+                .andDo(print())
+                .andExpect(status().isOk())
+        ;
+    }
+
+    @Test
+    public void optionsTest() throws Exception {
+        mockMvc.perform(options("/sample/hello"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(header().stringValues(HttpHeaders.ALLOW,
+                        hasItems(containsString("GET"), containsString("HEAD"), containsString("OPTIONS"))))
         ;
     }
 }
