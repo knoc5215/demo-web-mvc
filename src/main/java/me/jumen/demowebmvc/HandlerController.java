@@ -1,6 +1,7 @@
 package me.jumen.demowebmvc;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -40,5 +41,13 @@ public class HandlerController {
         event.setName(params.get("name"));
         event.setLimit(Integer.parseInt(params.get("limit")));
         return event;
+    }
+
+    @GetMapping("/events/form")
+    public String eventsForm(Model model) {
+        Event event = new Event();
+        event.setLimit(50);
+        model.addAttribute("event", new Event());
+        return "events/form";
     }
 }

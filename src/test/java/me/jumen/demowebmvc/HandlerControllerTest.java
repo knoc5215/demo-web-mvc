@@ -8,8 +8,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest
 class HandlerControllerTest {
@@ -56,6 +55,15 @@ class HandlerControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("name").value("jumen"))
                 .andExpect(jsonPath("limit").value(10))
+        ;
+    }
+
+    @Test
+    public void eventForm() throws Exception {
+        mockMvc.perform(get("/events/form"))
+                .andDo(print())
+                .andExpect(view().name("events/form"))
+                .andExpect(model().attributeExists("event"))
         ;
     }
 
