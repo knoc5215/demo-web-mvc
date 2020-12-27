@@ -83,23 +83,23 @@ public class SampleController {
         return "paramAndValue";
     }
 
-    @GetMapping("/events")
-    @ResponseBody
-    public String events() {
-        return "events";
-    }
-
-    @GetMapping("/events/{id}")
-    @ResponseBody
-    public String getAnEvents(@PathVariable int id) {
-        return "event";
-    }
-
-    @DeleteMapping("/events/{id}")
-    @ResponseBody
-    public String removeAnEvents(@PathVariable int id) {
-        return "event";
-    }
+//    @GetMapping("/events")
+//    @ResponseBody
+//    public String events() {
+//        return "events";
+//    }
+//
+//    @GetMapping("/events/{id}")
+//    @ResponseBody
+//    public String getAnEvents(@PathVariable int id) {
+//        return "event";
+//    }
+//
+//    @DeleteMapping("/events/{id}")
+//    @ResponseBody
+//    public String removeAnEvents(@PathVariable int id) {
+//        return "event";
+//    }
 
 
 
