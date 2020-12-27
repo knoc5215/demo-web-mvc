@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 //@RequestMapping(method = RequestMethod.GET)// class-level method filter
 //@RequestMapping(consumes = MediaType.APPLICATION_ATOM_XML_VALUE)  // class-level consumes is overrided by method-level
-@RequestMapping("/sample")
+@RequestMapping(value = "/sample", produces = MediaType.APPLICATION_JSON_VALUE)
 public class SampleController {
 
 //    @GetMapping("/hello")
@@ -81,6 +81,24 @@ public class SampleController {
     @GetMapping(value = "/paramAndValue", params = "param=1")
     public @ResponseBody String paramAndValue() {
         return "paramAndValue";
+    }
+
+    @GetMapping("/events")
+    @ResponseBody
+    public String events() {
+        return "events";
+    }
+
+    @GetMapping("/events/{id}")
+    @ResponseBody
+    public String getAnEvents(@PathVariable int id) {
+        return "event";
+    }
+
+    @DeleteMapping("/events/{id}")
+    @ResponseBody
+    public String removeAnEvents(@PathVariable int id) {
+        return "event";
     }
 
 
