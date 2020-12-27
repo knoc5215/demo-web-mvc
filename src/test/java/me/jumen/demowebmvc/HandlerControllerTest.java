@@ -47,6 +47,18 @@ class HandlerControllerTest {
     }
 
     @Test
+    public void getEventModel() throws Exception {
+        mockMvc.perform(post("/eventsModel")
+                .param("name", "jumen")
+                .param("limit", "-100"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("name").value("jumen"))
+//                .andExpect(jsonPath("limit").value(10))
+        ;
+    }
+
+    @Test
     public void getEventMap() throws Exception {
         mockMvc.perform(post("/events/map")
                     .param("name", "jumen")
