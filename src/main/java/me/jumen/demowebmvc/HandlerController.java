@@ -7,6 +7,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -39,15 +41,32 @@ public class HandlerController {
     }
 
     @PostMapping("/eventsModel")
-    public @ResponseBody Event getEventModel(@Validated(Event.ValidateLimit.class) @ModelAttribute Event event, BindingResult bindingResult) {
+    public  String createEvent(@Validated @ModelAttribute Event event, BindingResult bindingResult, Model model) {
         if(bindingResult.hasErrors()) {
             System.out.println("==================");
             bindingResult.getAllErrors().forEach(c-> {
                 System.out.println(c.toString());
             });
             System.out.println("==================");
+            return "/events/form";
         }
-        return event;
+
+        return "redirect:/events/list";
+    }
+
+    @GetMapping("/events/list")
+    public String getEvents(Model model) {
+        Event event = new Event();
+        event.setName("spring");
+        event.setLimit(5555);
+
+        List<Event>eventList = new ArrayList<>();
+        eventList.add(event);
+
+        model.addAttribute("eventList", eventList);
+
+        return "/events/list";
+
     }
 
     @PostMapping("/events/map")
