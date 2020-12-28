@@ -101,14 +101,17 @@ public class HandlerController {
 
         // make model attribute primitive type to queryParam set
         // http://localhost:8080/events/list?name=zz&limit=1231 로 만들어서 전달 가능하다 -> 수신측에서 @RequestParam로 활용하자
-        redirectAttributes.addAttribute("name", event.getName());
-        redirectAttributes.addAttribute("limit", event.getLimit());
+//        redirectAttributes.addAttribute("name", event.getName());
+//        redirectAttributes.addAttribute("limit", event.getLimit());
+        // string이 가능해야함
+
+        redirectAttributes.addFlashAttribute("newEvent", event);    // 세션에 객체를 저장하고, 리다이렉트 요청 처리 후 그 즉시 제거한다 (1회성, flash)
 
         return "redirect:/events/list";
     }
 
     @GetMapping("/events/list")
-    public String getEvents(Model model, @SessionAttribute("visitTime") LocalDateTime localDateTime, @RequestParam String name, @RequestParam Integer limit) {
+    public String getEvents(@ModelAttribute("newEvent") Event event, Model model, @SessionAttribute("visitTime") LocalDateTime localDateTime) {
         /*
         @ModelAttribute Event event로 사용할 시, @SessionAtrributes에 설정된 객체명과 겹치지 않게 -> 같을 경우 세션을 먼저 찾다가 없으면 에러가 난다
         @ModelAttribute("modelEvent") Event event & @SessionAttributes({"event"})  --> 이건 겹치지 않아서 에러 발생 X
@@ -116,17 +119,17 @@ public class HandlerController {
 
         System.out.println(localDateTime);
 
-        Event event = new Event();
-        event.setName("spring");
-        event.setLimit(5555);
+        Event springEvent = new Event();
+        springEvent.setName("spring");
+        springEvent.setLimit(5555);
 
-        Event eventParam = new Event();
-        eventParam.setName(name);
-        eventParam.setLimit(limit);
+        Event newEvent = (Event) model.asMap().get("newEvent");
+
 
         List<Event> eventList = new ArrayList<>();
+        eventList.add(springEvent);
         eventList.add(event);
-        eventList.add(eventParam);
+        eventList.add(newEvent);
 
         model.addAttribute("eventList", eventList);
 
