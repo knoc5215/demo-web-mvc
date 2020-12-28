@@ -10,6 +10,7 @@
 <div th:unless="${#lists.isEmpty(eventList)}">
     <ul th:each="event: ${eventList}">
         <p th:text="*{event.name}">Event Name</p>
+        <p th:text="*{event.limit}">Event Name</p>
     </ul>
 </div>
 </body>

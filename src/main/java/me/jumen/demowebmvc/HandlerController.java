@@ -45,19 +45,7 @@ public class HandlerController {
         return event;
     }
 
-    @PostMapping("/eventsModel")
-    public  String createEvent(@Validated @ModelAttribute Event event, BindingResult bindingResult, Model model) {
-        if(bindingResult.hasErrors()) {
-            System.out.println("==================");
-            bindingResult.getAllErrors().forEach(c-> {
-                System.out.println(c.toString());
-            });
-            System.out.println("==================");
-            return "/events/form";
-        }
 
-        return "redirect:/events/list";
-    }
 
     @GetMapping("/events/list")
     public String getEvents(Model model) {
@@ -82,16 +70,46 @@ public class HandlerController {
         return event;
     }
 
-    @GetMapping("/events/form")
-    public String eventsForm(Model model) {
-        Event event = new Event();
-        event.setLimit(50);
+    @GetMapping("/events/form/name")
+    public String eventsFormName(Model model) {
         model.addAttribute("event", new Event());
-
-//        session.setAttribute("event", event);
-
-        return "events/form";
+        return "events/form-name";
     }
 
+    @PostMapping("/events/form/name")
+    public  String eventsFormName(@Validated @ModelAttribute Event event, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            System.out.println("==================");
+            bindingResult.getAllErrors().forEach(c-> {
+                System.out.println(c.toString());
+            });
+            System.out.println("==================");
+            return "/events/form-name";
+        }
+
+        return "redirect:/events/form/limit";
+    }
+
+    @GetMapping("/events/form/limit")
+    public String eventsFormLimit(@ModelAttribute Event event, Model model) {
+        model.addAttribute("event", event);
+        return "events/form-limit";
+    }
+
+    @PostMapping("/events/form/limit")
+    public  String eventsFormLimit(@Validated @ModelAttribute Event event, BindingResult bindingResult, SessionStatus sessionStatus) {
+        if(bindingResult.hasErrors()) {
+            System.out.println("==================");
+            bindingResult.getAllErrors().forEach(c-> {
+                System.out.println(c.toString());
+            });
+            System.out.println("==================");
+            return "/events/form-limit";
+        }
+
+        sessionStatus.setComplete();
+
+        return "redirect:/events/list";
+    }
 
 }
