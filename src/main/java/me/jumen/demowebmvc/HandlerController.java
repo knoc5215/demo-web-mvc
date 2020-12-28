@@ -5,13 +5,16 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @Controller
+@SessionAttributes({"event"})   // model에 들어가 있는 값들 중에 동일한 값이 있다면, 넣어준다
 public class HandlerController {
 
     @GetMapping("/events/{id}")
@@ -32,10 +35,12 @@ public class HandlerController {
     }
 
     @PostMapping("/events")
-    public @ResponseBody Event getEvent(@RequestParam String name, @RequestParam Integer limit) {
+    public @ResponseBody Event getEvent(@RequestParam String name, @RequestParam Integer limit, SessionStatus sessionStatus) {
         Event event = new Event();
         event.setName(name);
         event.setLimit(limit);
+
+        sessionStatus.setComplete();    // session clear
 
         return event;
     }
@@ -82,6 +87,9 @@ public class HandlerController {
         Event event = new Event();
         event.setLimit(50);
         model.addAttribute("event", new Event());
+
+//        session.setAttribute("event", event);
+
         return "events/form";
     }
 
