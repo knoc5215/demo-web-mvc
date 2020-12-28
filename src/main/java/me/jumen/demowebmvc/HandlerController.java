@@ -6,6 +6,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -19,15 +20,17 @@ import java.util.Map;
 public class HandlerController {
 
     @GetMapping("/events/{id}")
-    public @ResponseBody Event getEvent(@PathVariable("id") Integer idValue) {
-       Event event = new Event();
-       event.setId(idValue);    // 다르게 표현도 가능하다
+    @ResponseBody
+    public Event getEvent(@PathVariable("id") Integer idValue) {
+        Event event = new Event();
+        event.setId(idValue);    // 다르게 표현도 가능하다
 
-       return event;
-   }
+        return event;
+    }
 
     @GetMapping("/events/matrix/{id}")
-    public @ResponseBody Event getEvent(@PathVariable Integer id, @MatrixVariable String name) {
+    @ResponseBody
+    public Event getEvent(@PathVariable Integer id, @MatrixVariable String name) {
         Event event = new Event();
         event.setId(id);
         event.setName(name);
@@ -36,7 +39,8 @@ public class HandlerController {
     }
 
     @PostMapping("/events")
-    public @ResponseBody Event getEvent(@RequestParam String name, @RequestParam Integer limit, SessionStatus sessionStatus) {
+    @ResponseBody
+    public Event getEvent(@RequestParam String name, @RequestParam Integer limit, SessionStatus sessionStatus) {
         Event event = new Event();
         event.setName(name);
         event.setLimit(limit);
@@ -47,27 +51,9 @@ public class HandlerController {
     }
 
 
-
-    @GetMapping("/events/list")
-    public String getEvents(Model model, @SessionAttribute("visitTime") LocalDateTime localDateTime) {
-
-        System.out.println(localDateTime);
-
-        Event event = new Event();
-        event.setName("spring");
-        event.setLimit(5555);
-
-        List<Event>eventList = new ArrayList<>();
-        eventList.add(event);
-
-        model.addAttribute("eventList", eventList);
-
-        return "/events/list";
-
-    }
-
     @PostMapping("/events/map")
-    public @ResponseBody Event getEvent(@RequestParam Map<String,String> params) {
+    @ResponseBody
+    public Event getEvent(@RequestParam Map<String, String> params) {
         Event event = new Event();
         event.setName(params.get("name"));
         event.setLimit(Integer.parseInt(params.get("limit")));
@@ -81,10 +67,10 @@ public class HandlerController {
     }
 
     @PostMapping("/events/form/name")
-    public  String eventsFormName(@Validated @ModelAttribute Event event, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
+    public String eventsFormName(@Validated @ModelAttribute Event event, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
             System.out.println("==================");
-            bindingResult.getAllErrors().forEach(c-> {
+            bindingResult.getAllErrors().forEach(c -> {
                 System.out.println(c.toString());
             });
             System.out.println("==================");
@@ -101,10 +87,10 @@ public class HandlerController {
     }
 
     @PostMapping("/events/form/limit")
-    public  String eventsFormLimit(@Validated @ModelAttribute Event event, BindingResult bindingResult, SessionStatus sessionStatus) {
-        if(bindingResult.hasErrors()) {
+    public String eventsFormLimit(@Validated @ModelAttribute Event event, BindingResult bindingResult, SessionStatus sessionStatus, RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
             System.out.println("==================");
-            bindingResult.getAllErrors().forEach(c-> {
+            bindingResult.getAllErrors().forEach(c -> {
                 System.out.println(c.toString());
             });
             System.out.println("==================");
@@ -113,7 +99,39 @@ public class HandlerController {
 
         sessionStatus.setComplete();
 
+        // make model attribute primitive type to queryParam set
+        // http://localhost:8080/events/list?name=zz&limit=1231 로 만들어서 전달 가능하다 -> 수신측에서 @RequestParam로 활용하자
+        redirectAttributes.addAttribute("name", event.getName());
+        redirectAttributes.addAttribute("limit", event.getLimit());
+
         return "redirect:/events/list";
+    }
+
+    @GetMapping("/events/list")
+    public String getEvents(Model model, @SessionAttribute("visitTime") LocalDateTime localDateTime, @RequestParam String name, @RequestParam Integer limit) {
+        /*
+        @ModelAttribute Event event로 사용할 시, @SessionAtrributes에 설정된 객체명과 겹치지 않게 -> 같을 경우 세션을 먼저 찾다가 없으면 에러가 난다
+        @ModelAttribute("modelEvent") Event event & @SessionAttributes({"event"})  --> 이건 겹치지 않아서 에러 발생 X
+         */
+
+        System.out.println(localDateTime);
+
+        Event event = new Event();
+        event.setName("spring");
+        event.setLimit(5555);
+
+        Event eventParam = new Event();
+        eventParam.setName(name);
+        eventParam.setLimit(limit);
+
+        List<Event> eventList = new ArrayList<>();
+        eventList.add(event);
+        eventList.add(eventParam);
+
+        model.addAttribute("eventList", eventList);
+
+        return "/events/list";
+
     }
 
 }
