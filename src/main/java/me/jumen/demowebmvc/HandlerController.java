@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -18,6 +19,14 @@ import java.util.Map;
 @Controller
 @SessionAttributes({"event"})   // model에 들어가 있는 값들 중에 동일한 값이 있다면, 넣어준다
 public class HandlerController {
+
+    // custom validator도 지원한다
+    @InitBinder("event")    // event 객체가 들어올때 적용한다
+    public void initEventBinder(WebDataBinder webDataBinder) {
+//        webDataBinder.setDisallowedFields("id");    // 블랙리스트 - id를 form에서 보내더라도 걸러내준다
+//        webDataBinder.setAllowedFields();       // 화이트리스트
+        webDataBinder.addValidators(new EventValidator());  // custom validator add
+    }
 
 
     @ModelAttribute("cateogories")
