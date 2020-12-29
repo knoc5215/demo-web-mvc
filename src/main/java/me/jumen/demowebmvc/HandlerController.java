@@ -19,6 +19,17 @@ import java.util.Map;
 @SessionAttributes({"event"})   // model에 들어가 있는 값들 중에 동일한 값이 있다면, 넣어준다
 public class HandlerController {
 
+
+    @ModelAttribute("cateogories")
+    public void categories(Model model) {
+        model.addAttribute("categories", List.of("spring", "jpa", "mysql"));
+    }
+
+ /*   @ModelAttribute
+    public List<String> categories2(Model model) {
+        return List.of("spring", "jpa", "mysql");
+    }*/
+
     @GetMapping("/events/{id}")
     @ResponseBody
     public Event getEvent(@PathVariable("id") Integer idValue) {

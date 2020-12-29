@@ -103,6 +103,7 @@ class HandlerControllerTest {
                 .sessionAttr("visitTime", LocalDateTime.now())
                 .flashAttr(("newEvent"), newEvent))
                 .andDo(print())
+                .andExpect(model().attributeExists("categories"))
                 .andExpect(status().isOk())
         ;
     }
