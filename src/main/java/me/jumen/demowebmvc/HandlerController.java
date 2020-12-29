@@ -20,6 +20,26 @@ import java.util.Map;
 @SessionAttributes({"event"})   // model에 들어가 있는 값들 중에 동일한 값이 있다면, 넣어준다
 public class HandlerController {
 
+    // 여러 error를 한꺼번에 처리할때는 매개변수에서 상위타입으로 잡아야 한
+    @ExceptionHandler({EventException.class, RuntimeException.class})
+    public String eventErrorHandler(RuntimeException runtimeException, Model model) {
+        model.addAttribute("message", "error");
+        return "error";
+    }
+
+    @ExceptionHandler
+    public String eventErrorHandler(EventException eventException, Model model) {
+        model.addAttribute("message", "event error");
+        return "error";
+    }
+
+    @ExceptionHandler
+    public String runtimeExceptionHandler(RuntimeException runtimeException, Model model) {
+        model.addAttribute("message", "runtime exception ");
+        return "error";
+    }
+
+
     // custom validator도 지원한다
     @InitBinder("event")    // event 객체가 들어올때 적용한다
     public void initEventBinder(WebDataBinder webDataBinder) {
@@ -82,8 +102,10 @@ public class HandlerController {
 
     @GetMapping("/events/form/name")
     public String eventsFormName(Model model) {
-        model.addAttribute("event", new Event());
-        return "events/form-name";
+//        throw new EventException();
+        throw new RuntimeException();
+//        model.addAttribute("event", new Event());
+//        return "events/form-name";
     }
 
     @PostMapping("/events/form/name")

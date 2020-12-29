@@ -14,6 +14,12 @@ import javax.validation.Valid;
 @RequestMapping("/api/events")
 public class EventApi {
 
+    // REST API 에서 주로 쓴다 - reference 참고
+    @ExceptionHandler
+    public ResponseEntity errorHandler() {
+        return ResponseEntity.badRequest().body("can't create event as...");
+    }
+
     @PostMapping()
     @ResponseBody
     public Event createEvent(/*HttpEntity<Event> request,*/ @RequestBody Event event, BindingResult bindingResult) {
