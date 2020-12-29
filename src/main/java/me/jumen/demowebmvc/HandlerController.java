@@ -21,21 +21,15 @@ import java.util.Map;
 public class HandlerController {
 
     // 여러 error를 한꺼번에 처리할때는 매개변수에서 상위타입으로 잡아야 한
-    @ExceptionHandler({EventException.class, RuntimeException.class})
-    public String eventErrorHandler(RuntimeException runtimeException, Model model) {
-        model.addAttribute("message", "error");
-        return "error";
-    }
+//    @ExceptionHandler({EventException.class, RuntimeException.class})
+//    public String eventErrorHandler(RuntimeException runtimeException, Model model) {
+//        model.addAttribute("message", "error");
+//        return "error";
+//    }
 
     @ExceptionHandler
     public String eventErrorHandler(EventException eventException, Model model) {
         model.addAttribute("message", "event error");
-        return "error";
-    }
-
-    @ExceptionHandler
-    public String runtimeExceptionHandler(RuntimeException runtimeException, Model model) {
-        model.addAttribute("message", "runtime exception ");
         return "error";
     }
 
